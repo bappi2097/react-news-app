@@ -1,4 +1,5 @@
 import React from "react"
+import fetchAPI from "../../utils/fetch"
 import Button from "../../components/Button"
 import TextField from "../../components/TextField"
 
@@ -16,16 +17,8 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    }
 
-    fetch("http://localhost:8000/api/login/", requestOptions)
+    fetchAPI("api/login/", { method: "POST", body: formData })
       .then((response) => response.json())
       .then((response) => {
         console.log(response)
