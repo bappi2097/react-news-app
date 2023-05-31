@@ -2,6 +2,7 @@ import React from "react"
 import fetchAPI from "../../utils/fetch"
 import Button from "../../components/Button"
 import TextField from "../../components/TextField"
+import { useGlobalContext } from "../../context/GlobalContext"
 
 const Login = () => {
   const [formData, setFormData] = React.useState({
@@ -10,6 +11,7 @@ const Login = () => {
   })
 
   const [errors, setErrors] = React.useState({ email: [], password: [] })
+  const { setLoader } = useGlobalContext()
   /**
    * handleSubmit
    * @param {React.FormEvent} e
@@ -17,7 +19,7 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
+    setLoader(true)
     fetchAPI("api/login/", { method: "POST", body: formData })
       .then((response) => response.json())
       .then((response) => {
@@ -25,8 +27,12 @@ const Login = () => {
         if (response.errors) {
           setErrors(response.errors)
         }
+        setLoader(false)
       })
-      .catch(console.log)
+      .catch((error) => {
+        setLoader(false)
+        console.log(error)
+      })
   }
 
   /**
