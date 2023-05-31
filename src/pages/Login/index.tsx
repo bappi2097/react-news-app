@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import fetchAPI from "../../utils/fetch"
 import Button from "../../components/Button"
 import TextField from "../../components/TextField"
@@ -11,12 +11,15 @@ const Login = () => {
   })
 
   const [errors, setErrors] = React.useState({ email: [], password: [] })
-  const { setLoader } = useGlobalContext()
+  const { setLoader, toast } = useGlobalContext()
   /**
    * handleSubmit
    * @param {React.FormEvent} e
    */
-
+  useEffect(() => {
+    toast("Hello world")
+    toast("Hello world", "danger")
+  }, [])
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoader(true)
