@@ -1,34 +1,51 @@
 import React, { useEffect } from "react"
 import fetchAPI from "../../utils/fetch"
 import Button from "../../components/Button"
+import { setSessionToken } from "../../utils/token"
+import { ErrorType } from "../../utils/types"
+import { useNavigate } from "react-router-dom"
 import TextField from "../../components/TextField"
+import useAuthContext from "../../hooks/useAuthContext"
 import { useGlobalContext } from "../../context/GlobalContext"
 
+type LoginType = {
+  email: string
+  password: string
+}
+
 const Login = () => {
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<LoginType>({
     email: "",
     password: "",
   })
 
-  const [errors, setErrors] = React.useState({ email: [], password: [] })
+  const [errors, setErrors] = React.useState<ErrorType<LoginType>>({
+    email: [],
+    password: [],
+  })
   const { setLoader, toast } = useGlobalContext()
+  const { token, setToken } = useAuthContext()
+  const navigate = useNavigate()
+
   /**
    * handleSubmit
    * @param {React.FormEvent} e
    */
-  useEffect(() => {
-    toast("Hello world")
-    toast("Hello world", "danger")
-  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoader(true)
     fetchAPI("api/login/", { method: "POST", body: formData })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response)
         if (response.errors) {
+          toast(response.message, "danger")
           setErrors(response.errors)
+        } else {
+          setToken(response.token)
+          setSessionToken(response.token)
+          navigate("/")
+          toast(response.message)
         }
         setLoader(false)
       })
@@ -53,6 +70,12 @@ const Login = () => {
       [name]: [],
     }))
   }
+
+  useEffect(() => {
+    if (token) {
+      navigate("/home")
+    }
+  }, [token])
 
   return (
     <div className='flex min-h-full flex-col justify-center px-6 py-12 lg:px-8'>

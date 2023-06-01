@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useEffect } from "react"
 import fetchAPI from "../../utils/fetch"
 import Button from "../../components/Button"
 import TextField from "../../components/TextField"
 import { initialRegisterData } from "../../utils/defaults"
 import { ErrorType, RegisterData } from "../../utils/types"
-import { setToken } from "../../utils/token"
+import { setSessionToken } from "../../utils/token"
+import useAuthContext from "../../hooks/useAuthContext"
+import { useNavigate } from "react-router-dom"
 
 const Register = () => {
   const [formData, setFormData] =
@@ -16,6 +18,8 @@ const Register = () => {
     lastName: [],
     password: [],
   })
+  const { token, setToken } = useAuthContext()
+  const navigate = useNavigate()
 
   /**
    * handleSubmit
@@ -30,6 +34,7 @@ const Register = () => {
       .then((response) => {
         if (response.token) {
           setToken(response.token)
+          setSessionToken(response.token)
         }
         console.log(response)
         if (response.errors) {
@@ -54,6 +59,12 @@ const Register = () => {
       [name]: [],
     }))
   }
+
+  useEffect(() => {
+    if (token) {
+      navigate("/")
+    }
+  }, [token])
 
   return (
     <div className='flex min-h-full flex-col justify-center px-6 py-12 lg:px-8'>

@@ -5,13 +5,16 @@ import { ToastContainer } from "react-toastify"
 import Router from "./routes/index.tsx"
 import { BrowserRouter } from "react-router-dom"
 import GlobalProvider from "./context/GlobalContext.tsx"
+import AuthProvider from "./provider/AuthProvider.tsx"
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <GlobalProvider>
-      <BrowserRouter>
-        <Router />
-        <ToastContainer />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Router />
+          <ToastContainer />
+        </BrowserRouter>
+      </AuthProvider>
     </GlobalProvider>
   </React.StrictMode>
 )

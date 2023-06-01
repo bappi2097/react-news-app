@@ -1,15 +1,11 @@
 import { ReactNode, useEffect, useState } from "react"
 import AuthContext from "../context/AuthContext"
 import useToken from "../hooks/useToken"
-import { Navigate } from "react-router-dom"
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState("")
   const { token: sessionToken } = useToken()
-
-  if (!token) {
-    return <Navigate to='/login' />
-  }
+  const [token, setToken] = useState(sessionToken)
+  console.log(token)
 
   useEffect(() => {
     setToken(token)

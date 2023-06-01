@@ -1,18 +1,38 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 export type ToastifyType = "success" | "danger" | "warning" | "info"
 
-export type ToastifyProps = {
+export type ToastifyObjType = {
   type?: ToastifyType
   message: string
 }
 
-const Toastify: React.FC<ToastifyProps> = ({ type = "success", message }) => {
+export type ToastifyProps = ToastifyObjType & {
+  onDestroy: () => void
+}
+
+const Toastify: React.FC<ToastifyProps> = ({
+  type = "success",
+  message,
+  onDestroy,
+}) => {
+  const [opacity, setOpacity] = useState(false)
+  useEffect(() => {
+    setTimeout(() => {
+      setOpacity(true)
+    }, 1500)
+    setTimeout(() => {
+      onDestroy()
+    }, 2500)
+  }, [])
+
   return (
     <>
       <div
         id={`toast-${type}`}
-        className='flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800'
+        className={`flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 transition-opacity ease-in-out ${
+          opacity ? "opacity-0" : "opacity-100"
+        }`}
         role='alert'
       >
         {type && getIcon(type)}
