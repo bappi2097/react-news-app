@@ -3,10 +3,9 @@ import { NavLink, useNavigate } from "react-router-dom"
 import fetchAPI from "../../utils/fetch"
 import useAuthContext from "../../hooks/useAuthContext"
 import { useGlobalContext } from "../../context/GlobalContext"
-import { setSessionToken } from "../../utils/token"
 
 const Navbar: React.FC = () => {
-  const { token, setToken } = useAuthContext()
+  const { token, setToken, user } = useAuthContext()
   const [menuOpened, setMenuOpened] = useState(false)
   const { setLoader, toast } = useGlobalContext()
   const navigate = useNavigate()
@@ -23,7 +22,6 @@ const Navbar: React.FC = () => {
         if (response.errors) {
           toast(response.message, "danger")
         } else {
-          setSessionToken("")
           setToken("")
           toast(response.message)
           navigate("/login")
@@ -62,18 +60,6 @@ const Navbar: React.FC = () => {
                   aria-current='page'
                 >
                   Home
-                </NavLink>
-                <NavLink
-                  to='/'
-                  className={({ isActive }) =>
-                    `${
-                      isActive
-                        ? "text-black border-b-2 border-indigo-600"
-                        : "text-gray-500 hover:border-b-2 hover:border-indigo-600 hover:text-black"
-                    } px-3 py-2 text-sm font-medium`
-                  }
-                >
-                  Team
                 </NavLink>
               </div>
             </div>
@@ -194,10 +180,10 @@ const Navbar: React.FC = () => {
             </div>
             <div className='ml-3'>
               <div className='text-base font-medium leading-none text-gray-600'>
-                Tom Cook
+                {user?.firstName} {user?.lastName}
               </div>
               <div className='text-sm font-medium leading-none text-gray-600'>
-                tom@example.com
+                {user?.email}
               </div>
             </div>
           </div>

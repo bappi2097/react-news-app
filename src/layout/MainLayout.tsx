@@ -11,10 +11,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     <>
       <div className='min-h-full'>
         <Navbar />
-        <main>
-          <div className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8'>
-            {children}
-          </div>
+        <main className='mx-auto max-w-full py-6 sm:px-2 lg:px-6'>
+          {children}
         </main>
         <Footer />
       </div>

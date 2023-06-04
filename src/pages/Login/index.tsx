@@ -1,7 +1,6 @@
 import React, { useEffect } from "react"
 import fetchAPI from "../../utils/fetch"
 import Button from "../../components/Button"
-import { setSessionToken } from "../../utils/token"
 import { ErrorType } from "../../utils/types"
 import { useNavigate } from "react-router-dom"
 import TextField from "../../components/TextField"
@@ -24,7 +23,7 @@ const Login = () => {
     password: [],
   })
   const { setLoader, toast } = useGlobalContext()
-  const { token, setToken } = useAuthContext()
+  const { token, setToken, setUser } = useAuthContext()
   const navigate = useNavigate()
 
   /**
@@ -41,9 +40,11 @@ const Login = () => {
         if (response.errors) {
           toast(response.message, "danger")
           setErrors(response.errors)
+        } else if (response.type === "error") {
+          toast(response.message, "danger")
         } else {
+          setUser(response.user)
           setToken(response.token)
-          setSessionToken(response.token)
           navigate("/")
           toast(response.message)
         }

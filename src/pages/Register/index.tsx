@@ -4,9 +4,9 @@ import Button from "../../components/Button"
 import TextField from "../../components/TextField"
 import { initialRegisterData } from "../../utils/defaults"
 import { ErrorType, RegisterData } from "../../utils/types"
-import { setSessionToken } from "../../utils/token"
 import useAuthContext from "../../hooks/useAuthContext"
 import { useNavigate } from "react-router-dom"
+import { useGlobalContext } from "../../context/GlobalContext"
 
 const Register = () => {
   const [formData, setFormData] =
@@ -18,7 +18,8 @@ const Register = () => {
     lastName: [],
     password: [],
   })
-  const { token, setToken } = useAuthContext()
+  const { token, setToken, setUser } = useAuthContext()
+  const { toast } = useGlobalContext()
   const navigate = useNavigate()
 
   /**
@@ -34,9 +35,13 @@ const Register = () => {
       .then((response) => {
         if (response.token) {
           setToken(response.token)
-          setSessionToken(response.token)
         }
-        console.log(response)
+        if (response.user) {
+          setUser(response.user)
+        }
+        if (response.message) {
+          toast(response.message)
+        }
         if (response.errors) {
           setErrors(response.errors)
         }
